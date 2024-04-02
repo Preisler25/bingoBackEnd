@@ -11,17 +11,12 @@ export class App {
     this.app.listen(this.port, () => {
       console.log(`server running on port ${this.port}`);
     });
+    this.init = this.init.bind(this);
+    this.init();
   }
 
   public async init() {
     console.log("Initializing the app");
     await DbService.init();
-    DbService.query("SELECT now();")
-      .then((result) => {
-        console.log("Query result:", result);
-      })
-      .catch((error) => {
-        console.error("Error executing query:", error);
-      });
   }
 }

@@ -15,6 +15,118 @@ export class DbService {
   public static async init() {
     await this.connectToDB();
     console.log("Database service initialized");
+    await this.createBaseTables();
+    await this.createGameTable(3);
+  }
+
+  /*
+    Depending on the game, we need a 3x3, 4x4 or 5x5 grid. In the grid, we have the events
+
+    User
+    - id (primary key)
+    - username (unique)
+    - password (hashed)
+    - win_count (default 0)
+
+    EventTable
+    - id (primary key)
+    - event_name (unique)
+
+    GameTable (3x3)
+    - user_id (foreign key)
+    - user_event_id_1 (foreign key)
+    - user_event_id_2 (foreign key)
+    - user_event_id_3 (foreign key)
+    - user_event_id_4 (foreign key)
+    - user_event_id_5 (foreign key)
+    - user_event_id_6 (foreign key)
+    - user_event_id_7 (foreign key)
+    - user_event_id_8 (foreign key)
+    - user_event_id_9 (foreign key)
+
+    GameTable (4x4)
+    - user_id (foreign key)
+    - user_event_id_1 (foreign key)
+    - user_event_id_2 (foreign key)
+    - user_event_id_3 (foreign key)
+    - user_event_id_4 (foreign key)
+    - user_event_id_5 (foreign key)
+    - user_event_id_6 (foreign key)
+    - user_event_id_7 (foreign key)
+    - user_event_id_8 (foreign key)
+    - user_event_id_9 (foreign key)
+    - user_event_id_10 (foreign key)
+    - user_event_id_11 (foreign key)
+    - user_event_id_12 (foreign key)
+    - user_event_id_13 (foreign key)
+    - user_event_id_14 (foreign key)
+    - user_event_id_15 (foreign key)
+    - user_event_id_16 (foreign key)
+
+    GameTable (5x5)
+    - user_id (foreign key)
+    - user_event_id_1 (foreign key)
+    - user_event_id_2 (foreign key)
+    - user_event_id_3 (foreign key)
+    - user_event_id_4 (foreign key)
+    - user_event_id_5 (foreign key)
+    - user_event_id_6 (foreign key)
+    - user_event_id_7 (foreign key)
+    - user_event_id_8 (foreign key)
+    - user_event_id_9 (foreign key)
+    - user_event_id_10 (foreign key)
+    - user_event_id_11 (foreign key)
+    - user_event_id_12 (foreign key)
+    - user_event_id_13 (foreign key)
+    - user_event_id_14 (foreign key)
+    - user_event_id_15 (foreign key)
+    - user_event_id_16 (foreign key)
+    - user_event_id_17 (foreign key)
+    - user_event_id_18 (foreign key)
+    - user_event_id_19 (foreign key)
+    - user_event_id_20 (foreign key)
+    - user_event_id_21 (foreign key)
+    - user_event_id_22 (foreign key)
+    - user_event_id_23 (foreign key)
+    - user_event_id_24 (foreign key)
+    - user_event_id_25 (foreign key)
+
+    We have to implement the following methods:
+    - createUser(username, password)
+    - createEvent(eventName)
+    - createGame(user_id, event_ids)
+    - getGame(user_id)
+    - getGames()
+    - updateWinCount(user_id)
+    - deleteGame(user_id)
+    - deleteUser(user_id)
+    - deleteEvent(event_id)
+
+    */
+
+  private static async createBaseTables() {
+    this.query(`
+        CREATE TABLE IF NOT EXISTS "User" (id SERIAL PRIMARY KEY, username VARCHAR(255) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, win_count INT DEFAULT 0);
+    `);
+    this.query(`
+            CREATE TABLE IF NOT EXISTS "EventTable" (
+            id SERIAL PRIMARY KEY,
+            event_name VARCHAR(255) UNIQUE NOT NULL
+        );
+    `);
+  }
+
+  private static async createGameTable(table_size: number) {
+    let query = `
+        CREATE TABLE IF NOT EXISTS "GameTable" (
+            user_id INT REFERENCES "User"(id),
+    `;
+    for (let i = 1; i <= table_size * table_size; i++) {
+      query += `user_event_id_${i} INT REFERENCES "EventTable"(id),`;
+    }
+    query += `PRIMARY KEY (user_id)
+    );`;
+    this.query(query);
   }
 
   private static async connectToDB() {
