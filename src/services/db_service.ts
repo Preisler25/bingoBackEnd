@@ -106,23 +106,28 @@ export class DbService {
 
   private static async createBaseTables() {
     this.query(`
-        CREATE TABLE IF NOT EXISTS "User" (id SERIAL PRIMARY KEY, username VARCHAR(255) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, win_count INT DEFAULT 0);
+        CREATE TABLE IF NOT EXISTS "users" (
+          id SERIAL PRIMARY KEY,
+          username VARCHAR(255) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          win_count INT DEFAULT 0
+          );
     `);
     this.query(`
-            CREATE TABLE IF NOT EXISTS "EventTable" (
+            CREATE TABLE IF NOT EXISTS "event_table" (
             id SERIAL PRIMARY KEY,
-            event_name VARCHAR(255) UNIQUE NOT NULL
+            event VARCHAR(255) UNIQUE NOT NULL
         );
     `);
   }
 
   private static async createGameTable(table_size: number) {
     let query = `
-        CREATE TABLE IF NOT EXISTS "GameTable" (
-            user_id INT REFERENCES "User"(id),
+        CREATE TABLE IF NOT EXISTS "game_table" (
+            user_id INT REFERENCES "users"(id),
     `;
     for (let i = 1; i <= table_size * table_size; i++) {
-      query += `user_event_id_${i} INT REFERENCES "EventTable"(id),`;
+      query += `user_event_id_${i} INT REFERENCES "event_table"(id),`;
     }
     query += `PRIMARY KEY (user_id)
     );`;

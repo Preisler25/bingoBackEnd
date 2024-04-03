@@ -1,4 +1,4 @@
-import { App } from "./models/app";
+import { App } from "./app";
 import dotenv from "dotenv";
 
 dotenv.config();

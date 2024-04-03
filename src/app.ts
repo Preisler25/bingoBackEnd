@@ -1,5 +1,6 @@
 import express from "express";
-import { DbService } from "../services/db_service";
+import { DbService } from "./services/db_service";
+import { EventService } from "./services/event_service";
 
 export class App {
   private app: express.Application;
