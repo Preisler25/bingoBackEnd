@@ -1,5 +1,6 @@
 import { UserEvent } from "types/type_user_event";
 import { DbService } from "./db_service";
+import { GameOnStatus } from "types/type_game_on_status";
 
 export class EventService {
   public static async endGame(): Promise<void> {
@@ -11,7 +12,7 @@ export class EventService {
     }
   }
 
-  public static async isOnline(): Promise<boolean> {
+  public static async isOnline(): Promise<GameOnStatus> {
     try {
       const result = await DbService.query(
         `SELECT EXISTS(
@@ -21,15 +22,15 @@ export class EventService {
       );
 
       if (!result) {
-        return false;
+        return { db: false, game: false };
       }
       if (typeof result.rows[0][0] != "boolean") {
-        return false;
+        return { db: false, game: false };
       }
-      return result.rows[0][0];
+      return { db: true, game: result.rows[0][0] };
     } catch (error) {
       console.error("Error checking online status:", error);
-      return false;
+      return { db: false, game: false };
     }
   }
 
