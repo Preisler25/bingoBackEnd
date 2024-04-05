@@ -16,7 +16,6 @@ export class DbService {
     await this.connectToDB();
     console.log("Database service initialized");
     await this.createBaseTables();
-    await this.createGameTable(3);
   }
 
   /*
@@ -121,7 +120,7 @@ export class DbService {
     `);
   }
 
-  private static async createGameTable(table_size: number) {
+  public static async createGameTable(table_size: number) {
     let query = `
         CREATE TABLE IF NOT EXISTS "game_table" (
             user_id INT REFERENCES "users"(id),

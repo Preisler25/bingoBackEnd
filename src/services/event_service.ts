@@ -12,6 +12,10 @@ export class EventService {
     }
   }
 
+  public static async startGame(table_size: number): Promise<void> {
+    DbService.createGameTable(table_size);
+  }
+
   public static async isOnline(): Promise<GameOnStatus> {
     try {
       const result = await DbService.query(
