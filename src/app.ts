@@ -14,6 +14,17 @@ export class App {
     this.app = express();
     this.server = createServer(this.app);
     SockerService.init(new Server(this.server));
+
+    SockerService.on("connection", (socket: any) => {
+      console.log("User connected");
+
+      socket.emit("message", "Hello from the server");
+
+      socket.on("disconnect", () => {
+        console.log("User disconnected");
+      });
+    });
+
     this.server.listen(this.port);
     this.init = this.init.bind(this);
     this.init();
