@@ -2,7 +2,7 @@ import express from "express";
 import { DbService } from "./services/db_service";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { SockerService } from "services/socker_service";
+import { SockerService } from "./services/socker_service";
 
 export class App {
   private app: express.Application;
